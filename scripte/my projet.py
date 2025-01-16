@@ -132,18 +132,14 @@ class wht :
         df['temperature'] = data['hourly']['temperature_2m']
         df['humidity'] = data['hourly']['relative_humidity_2m']
         df['wind_speed'] = data['hourly']['wind_speed_10m']
-        df['time'] = pd.to_datetime(df['time'])
-    
-        today = pd.Timestamp(datetime.now().date()) 
-        start_date = today - timedelta(days=10)      
-        df_filtered = df[(df['time'] >= start_date) & (df['time'] < today + timedelta(days=1))]
-        self.df = df_filtered  
+        df['time'] = pd.to_datetime(data['hourly']['time'])
+        self.df = df
 
     def update_weekly_forecast(self, daily_data):
         for i in range(7):
             max_temp = daily_data['temperature_2m_max'][i]
             min_temp = daily_data['temperature_2m_min'][i]
-            date = datetime.strptime(daily_data['time'][i], "%Y-%m-%d").strftime("%A")
+            date = datetime.strptime(daily_data['time'][i], "%Y-%m-%d").strftime("%Y-%m-%d")
             label_text = (f"{date}\n"f"🌡️Max:{max_temp}°C\n"f"🌡️Min:{min_temp}°C")
             self.forecast_labels_data[i].configure(text=label_text, font=("Arial", 16, "bold"))
 
